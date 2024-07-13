@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог книг{% endblock %}
+{% block content %}
+    <style>
+        .inputs {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+
+    <div class="container">
+        <div class="header">
+            <h1><a href="/books">Каталог</a></h1>
+        </div>
+        <div class="row">
+            {% for book in books %}
+                <div class="book col-md-4">
+                    <h2>{{ book.name }}</h2>
+                    <p>Автор: {{ book.author }}</p>
+                    <p>Дата публикации: {{ book.pub_date|date:"Y-m-d" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row inputs">
+            {% if page.has_previous %}
+                <a class="button button-primary"
+                   href="/books/{{ prev_page }}"
+                >
+                    ⟵{{ prev_page }}
+                </a>
+            {% endif %}
+            <pre>     </pre>
+            {% if page.has_next %}
+                <a class="button button-primary"
+                   href="/books/{{ next_page }}"
+                >
+                    {{ next_page }} ⟶
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
