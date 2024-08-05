@@ -1,0 +1,124 @@
+# примеры API-запросов
+
+@baseUrl = http://localhost:8000/api
+
+# получение датчиков
+GET {{baseUrl}}/sensors/
+Content-Type: application/json
+
+###
+
+OPTIONS {{baseUrl}}/sensors/1/
+
+###
+
+# создание датчика
+POST {{baseUrl}}/sensors/
+Content-Type: application/json
+
+{
+  "name": "ESP32-6",
+  "description": "Датчик в спальне 2"
+}
+
+###
+
+# создание датчика с ошибкой
+POST {{baseUrl}}/sensors/
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "Датчик в спальне"
+}
+
+###
+
+# обновление датчика
+PATCH {{baseUrl}}/sensors/1/
+Content-Type: application/json
+
+{
+  "description": "Датчик на кухне за холодильником!!!"
+}
+
+###
+
+# обновление датчика с ошибкой
+PATCH {{baseUrl}}/sensors/1/
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+
+###
+
+# добавление измерения
+POST {{baseUrl}}/measurements/
+Content-Type: application/json
+
+{
+  "sensor": 17,
+  "temperature": 23.3
+}
+
+###
+
+# загрузить фото на сервер
+POST {{baseUrl}}/measurements/upload/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="IMG_20200719_154809.jpg"
+Content-Type: image/jpg
+
+< /home/unker/Desktop/IMG_20200719_154809.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# загрузить фото на сервер и записать поля в БД
+POST {{baseUrl}}/measurements/
+Content-Type: multipart/form-data; boundary="boundary"
+
+--boundary
+Content-Disposition: form-data; name="sensor"
+
+5
+--boundary
+Content-Disposition: form-data; name="temperature"
+
+23.3
+--boundary
+Content-Disposition: form-data; name="image_sens"; filename="IMG_20200719_154809.jpg"
+Content-Type: image/jpg
+
+< /home/unker/Desktop/IMG_20200719_154809.jpg
+--boundary--
+
+###
+
+OPTIONS {{baseUrl}}/measurements/
+
+###
+
+# добавление измерения с ошибкой
+POST {{baseUrl}}/measurements/
+Content-Type: application/json
+
+{
+  "sensor": 1,
+  "temperature": ''
+}
+
+###
+
+# получение информации по датчику
+GET {{baseUrl}}/sensors/1/
+Content-Type: application/json
