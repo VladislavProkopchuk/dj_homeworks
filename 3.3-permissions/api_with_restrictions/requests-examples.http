@@ -1,0 +1,187 @@
+# примеры API-запросов
+
+@base = http://localhost:8000
+@baseUrl = http://localhost:8000/api
+@token_admin = d7a403b6f08ab34b0883a69c08ae707c1a869f01
+@token_admin2 = a93415594c1ccd92a639661ef55d7909413e718f
+@token_user = 4bac227a3c4ff215831984cb17c716ac744f91ff
+
+# получение объявлений
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+###
+
+# получение Токена
+POST {{base}}/login/
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+###
+
+# получение объявлений
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+
+###
+
+# создание объявления
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+{
+  "title": "Шкаф IKEA13",
+  "description": "Срочно"
+}
+
+###
+
+# создание объявления с ошибкой
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+{
+  "creator":1,
+  "title": "Шкаф IKEA",
+  "description": "Срочно"
+}
+
+###
+
+# попытка поменять объявление 
+PATCH {{baseUrl}}/advertisements/34/
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+{
+  "status": "OPEN"
+}
+
+###
+
+# попытка поменять чужое объявление от Админа
+PATCH {{baseUrl}}/advertisements/22/
+Content-Type: application/json
+Authorization: Token {{token_admin2}}
+
+{
+  "status": "DRAFT"
+}
+
+###
+
+# попытка поменять объявление без аутонтефикации
+PATCH {{baseUrl}}/advertisements/26/
+Content-Type: application/json
+
+{
+  "status": "CLOSED"
+}
+
+###
+
+# попытка поменять объявление от Юзера
+PATCH {{baseUrl}}/advertisements/26/
+Content-Type: application/json
+Authorization: Token {{token_user}}
+
+
+{
+  "status": "CLOSED"
+}
+
+###
+
+# фильтрация по создателю
+GET {{baseUrl}}/advertisements/?creator=1
+Content-Type: application/json
+
+###
+
+# фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_before=2020-10-01
+Content-Type: application/json
+
+###
+
+# фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_before=2022-09-05
+Content-Type: application/json
+
+###
+
+# фильтрация по статусу
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+
+###
+
+# фильтрация по статусу
+GET {{baseUrl}}/advertisements/?status=CLOSED
+Content-Type: application/json
+
+###
+
+# удаление чужого объявления от Админа
+DELETE {{baseUrl}}/advertisements/35/
+Content-Type: application/json
+Authorization: Token {{token_admin2}}
+
+###
+
+# удаление своего объявления
+DELETE {{baseUrl}}/advertisements/1/
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+###
+
+# удаление объявления
+DELETE {{baseUrl}}/advertisements/34/
+Content-Type: application/json
+
+###
+
+# удаление чужого объявления от Юзера
+DELETE {{baseUrl}}/advertisements/34/
+Content-Type: application/json
+Authorization: Token {{token_user}}
+
+###
+
+# получение избранных своих объявлений
+GET {{baseUrl}}/favorite/
+Content-Type: application/json
+Authorization: Token {{token_admin2}}
+
+###
+
+# добавление объявления в избранное 
+# (должна быть ошибка, т.к. добавляем своё)
+POST {{baseUrl}}/favorite/
+Content-Type: application/json
+Authorization: Token {{token_admin}}
+
+{
+  "advertisement": "21"
+}
+
+###
+
+# добавление объявления в избранное 
+POST {{baseUrl}}/favorite/
+Content-Type: application/json
+Authorization: Token {{token_admin2}}
+
+{
+  "advertisement": "34"
+}
